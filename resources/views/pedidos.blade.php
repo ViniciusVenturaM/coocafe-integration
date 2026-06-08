@@ -8,6 +8,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="icon" href="{{ asset('images/logo-cresol.png') }}" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <form action="{{ route('logout') }}" method="POST" class="d-inline ms-2">
+    @csrf
+    <button type="submit" class="btn btn-outline-danger" style="border-radius: 8px; padding: 10px 20px; font-weight: 600;">
+        <i class="fas fa-sign-out-alt me-2"></i> Sair
+    </button>
+</form>
     <style>
         :root {
             --coocafe-orange: #F58220;
