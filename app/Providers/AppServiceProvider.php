@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Http;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,13 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Http::macro('cresol', function () {
+            return Http::withoutVerifying()
+                ->baseUrl(env('API_BASE_URL'))
+                ->withOptions([
+                    'proxy' => env('FIXIE_URL'),
+                    'timeout' => 15
+                ]);
+        });
     }
 }

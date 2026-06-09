@@ -18,23 +18,22 @@ class Coocafe
                 Cache::put('access_token', $token, 600);
             }
         }
-        
+
         return $token;
     }
 
     public static function loginApi()
     {
         try {
-            $response = Http::withoutVerifying()
-                ->post(env('API_BASE_URL') . '/auth/login-api', [
-                    'username' => env('API_USERNAME'),
-                    'password' => env('API_PASSWORD'),
-                ]);
+            // Chamando o nosso atalho personalizado
+            $response = Http::cresol()->post('/auth/login-api', [
+                'username' => env('API_USERNAME'),
+                'password' => env('API_PASSWORD'),
+            ]);
 
             return $response->json('access_token');
         } catch (\Exception $e) {
             Log::error($e);
-
             return false;
         }
     }
@@ -42,10 +41,11 @@ class Coocafe
     public static function listOrders()
     {
         try {
-            $response = Http::withoutVerifying()
+            $response = Http::cresol()
                 ->withToken(self::getAuthToken())
-                ->post(env('API_BASE_URL') . '/coocafe/v1/listar-pedidos-parceiros?disablePagination=true', []);
-            $orders =  $response->json();
+                ->post('/coocafe/v1/listar-pedidos-parceiros?disablePagination=true', []);
+
+            $orders = $response->json();
             Pedido::saveOrders($orders);
 
             return $orders;
@@ -60,12 +60,9 @@ class Coocafe
     {
         $token = self::getAuthToken();
         try {
-            $response = Http::withoutVerifying()
+            $response = Http::cresol()
                 ->withToken($token)
-                ->post(
-                    env('API_BASE_URL') . '/coocafe/v1/atualizar-pedidos-parceiro-status?disablePagination=true&page=1&limit=10',
-                    $params
-                );
+                ->post('/coocafe/v1/atualizar-pedidos-parceiro-status?disablePagination=true&page=1&limit=10', $params);
 
             return $response->successful();
         } catch (\Exception $e) {
@@ -78,9 +75,9 @@ class Coocafe
     public static function getBase64($params)
     {
         try {
-            $response = Http::withoutVerifying()
+            $response = Http::cresol()
                 ->withToken(self::getAuthToken())
-                ->post(env('API_BASE_URL') . '/coocafe/v1/relatorio-pdf', $params);
+                ->post('/coocafe/v1/relatorio-pdf', $params);
 
             return $response->body();
         } catch (\Exception $e) {
