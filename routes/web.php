@@ -7,12 +7,18 @@ use App\Http\Controllers\LoginController;
 
 
 Route::get('/teste-autenticacao-secreta', function () {
-    $tentativa = \Illuminate\Support\Facades\Auth::attempt([
-        'usuario' => 'vinicius.ventura', 
-        'password' => 'coocafe2026'
-    ]);
+    // 1. Busca o seu usuário no banco da Railway
+    $user = \App\Models\User::where('usuario', 'vinicius.ventura')->first();
     
-    return $tentativa ? 'SENHA E USUÁRIO CORRETOS NO BANCO!' : 'FALHOU: O BANCO NÃO ACEITOU.';
+    if (!$user) {
+        return 'ERRO: Usuário vinicius.ventura não foi encontrado no banco da Railway. Certifique-se de que rodou o INSERT lá primeiro!';
+    }
+    
+    // 2. Atualiza a senha forçando a criptografia nativa do ambiente atual
+    $user->password = 'coocafe2026'; // O Cast 'hashed' do Model faz o trabalho sozinho
+    $user->save();
+    
+    return 'SUCESSO! A senha foi recriptografada e salva direto pelo Laravel na Railway. Agora remova esse código e tente logar na tela normal!';
 });
 
 
