@@ -45,7 +45,7 @@ class Coocafe
                 ->withToken(self::getAuthToken())
                 ->post('/coocafe/v1/listar-pedidos-parceiros?disablePagination=true', []);
             $orders = $response->json();
-
+            dd($orders, $response->status(), self::getAuthToken());
             Pedido::saveOrders($orders);
 
             return $orders;
