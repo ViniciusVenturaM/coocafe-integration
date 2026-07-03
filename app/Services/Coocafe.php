@@ -46,7 +46,6 @@ class Coocafe
                 ->post('/coocafe/v1/listar-pedidos-parceiros?disablePagination=true', []);
             $orders = $response->json();
 
-            dd($orders, $response->status());
             Pedido::saveOrders($orders);
 
             return $orders;
