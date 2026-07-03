@@ -25,7 +25,6 @@ class Coocafe
     public static function loginApi()
     {
         try {
-            // Chamando o nosso atalho personalizado
             $response = Http::cresol()->post('/auth/login-api', [
                 'username' => env('API_USERNAME'),
                 'password' => env('API_PASSWORD'),
@@ -34,6 +33,7 @@ class Coocafe
             return $response->json('access_token');
         } catch (\Exception $e) {
             Log::error($e);
+
             return false;
         }
     }
@@ -44,8 +44,9 @@ class Coocafe
             $response = Http::cresol()
                 ->withToken(self::getAuthToken())
                 ->post('/coocafe/v1/listar-pedidos-parceiros?disablePagination=true', []);
-
             $orders = $response->json();
+
+            dd($orders, $response->status());
             Pedido::saveOrders($orders);
 
             return $orders;
