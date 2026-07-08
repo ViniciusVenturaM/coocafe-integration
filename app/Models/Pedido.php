@@ -8,7 +8,9 @@ class Pedido extends Model
 {
     protected $fillable = [
         'numped',
-        'data'
+        'data',
+        'num_processo',
+        'chamado_finalizado'
     ];
 
     protected $casts = [
@@ -16,20 +18,20 @@ class Pedido extends Model
     ];
 
 
-    public static function saveOrders($orders)
+    public static function saveOrders($pedidos)
     {
-        foreach ($orders as $pedidoInfo) {
+        foreach ($pedidos as $pedidoInfo) {
             $dados = [
                 'numped' => $pedidoInfo['NUMPED'],
                 'data' => $pedidoInfo
             ];
 
-            $pedido = Pedido::where('numped', '=', $dados['numped'])->firstOrNew();
-
-            $pedido->fill($dados);
-            $pedido->save();
+            Pedido::updateOrCreate(
+                ['numped' => $dados['numped']],
+                $dados
+            );
         }
 
-        return $orders;
+        return $pedidos;
     }
 }

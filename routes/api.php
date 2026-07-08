@@ -13,3 +13,4 @@ Route::post('/login', [Coocafe::class, 'getAuthToken']);
 Route::get('/atualiza-status-pedido/{numped}/{bansit}/{valorLiberado?}', [ApiController::class, 'updateOrderStatus']);
 Route::get('/gera-pdf/{numped}', [ApiController::class, 'getReportPdf']);
 Route::post('/listar-pedidos', [Coocafe::class, 'listOrders']);
+Route::get('/atualiza-controle-pedido/{numped}/{processo}/{chamado}', [ApiController::class, 'updateControlePedido'])->name('pedidos.update_controle');

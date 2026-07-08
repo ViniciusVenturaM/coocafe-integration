@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('pedidos', function (Blueprint $table) {
             $table->id();
             $table->string('numped')->unique();
+            $table->string('num_processo')->nullable();
+            $table->boolean('chamado_finalizado')->default(false);
             $table->json('data');
             $table->timestamps();
         });

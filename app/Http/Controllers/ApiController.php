@@ -130,4 +130,20 @@ class ApiController extends Controller
             return response()->json(['message' => 'Erro ao chamar API externa.', 'error' => $e->getMessage()], $statusCode);
         }
     }
+
+    public function updateControlePedido($numped, $processo, $chamado)
+    {
+        $processoFormatado = $processo === 'nenhum' ? null : $processo;
+        $isAberto = $chamado == '1' ? true : false;
+
+        $pedidoLocal = Pedido::firstWhere('numped', $numped);
+
+        if ($pedidoLocal) {
+            $pedidoLocal->num_processo = $processoFormatado;
+            $pedidoLocal->chamado_finalizado = $isAberto;
+            $pedidoLocal->save();
+        }
+
+        return redirect()->route('pedidos.index')->with('success', 'Controle salvo com sucesso!');
+    }
 }

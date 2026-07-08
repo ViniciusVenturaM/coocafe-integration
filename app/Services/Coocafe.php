@@ -44,9 +44,25 @@ class Coocafe
             $response = Http::cresol()
                 ->withToken(self::getAuthToken())
                 ->post('/coocafe/v1/listar-pedidos-parceiros?disablePagination=true', []);
+
             $orders = $response->json();
             Pedido::saveOrders($orders);
 
+            $numpeds = array_column($orders, 'NUMPED');
+            $pedidosLocais = Pedido::whereIn('numped', $numpeds, 'and', false)->get()->keyBy('numped');
+
+            foreach ($orders as &$pedido) {
+                $numped = $pedido['NUMPED'];
+
+                if ($pedidosLocais->has($numped)) {
+                    $pedido['num_processo']   = $pedidosLocais[$numped]->num_processo;
+                    $pedido['chamado_finalizado'] = $pedidosLocais[$numped]->chamado_finalizado;
+                } else {
+                    $pedido['num_processo']   = null;
+                    $pedido['chamado_finalizado'] = false;
+                }
+            }
+            
             return $orders;
         } catch (\Exception $e) {
             Log::error($e);
@@ -77,7 +93,6 @@ class Coocafe
             $response = Http::cresol()
                 ->withToken(self::getAuthToken())
                 ->post('/coocafe/v1/relatorio-pdf', $params);
-
             return $response->body();
         } catch (\Exception $e) {
             Log::error($e);
