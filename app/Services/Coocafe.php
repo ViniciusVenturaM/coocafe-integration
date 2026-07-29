@@ -55,10 +55,10 @@ class Coocafe
                 $numped = $pedido['NUMPED'];
 
                 if ($pedidosLocais->has($numped)) {
-                    $pedido['num_processo']   = $pedidosLocais[$numped]->num_processo;
+                    $pedido['num_processo'] = $pedidosLocais[$numped]->num_processo;
                     $pedido['chamado_finalizado'] = $pedidosLocais[$numped]->chamado_finalizado;
                 } else {
-                    $pedido['num_processo']   = null;
+                    $pedido['num_processo'] = null;
                     $pedido['chamado_finalizado'] = false;
                 }
             }
@@ -78,7 +78,7 @@ class Coocafe
             $response = Http::cresol()
                 ->withToken($token)
                 ->post('/coocafe/v1/atualizar-pedidos-parceiro-status?disablePagination=true&page=1&limit=10', $params);
-            dd('opa',$token, $response->body(), $response->status(), $response->json());
+
             return $response->successful();
         } catch (\Exception $e) {
             Log::error($e);

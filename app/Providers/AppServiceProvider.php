@@ -26,7 +26,7 @@ class AppServiceProvider extends ServiceProvider
                 ->baseUrl(env('API_BASE_URL'))
                 ->withOptions([
                     'proxy' => env('FIXIE_URL'),
-                    'timeout' => 15
+                    'timeout' => 500
                 ]);
         });
 
