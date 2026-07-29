@@ -62,7 +62,7 @@ class Coocafe
                     $pedido['chamado_finalizado'] = false;
                 }
             }
-            
+
             return $orders;
         } catch (\Exception $e) {
             Log::error($e);
@@ -73,14 +73,13 @@ class Coocafe
 
     public static function updateOrder($params)
     {
-        dd('opa');
         $token = self::getAuthToken();
         try {
             $response = Http::cresol()
                 ->withToken($token)
                 ->post('/coocafe/v1/atualizar-pedidos-parceiro-status?disablePagination=true&page=1&limit=10', $params);
-        dd($token, $response->body(), $response->status(), $response->json());
-                return $response->successful();
+            dd($token, $response->body(), $response->status(), $response->json());
+            return $response->successful();
         } catch (\Exception $e) {
             Log::error($e);
 
