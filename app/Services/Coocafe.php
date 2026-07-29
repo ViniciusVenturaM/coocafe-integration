@@ -78,7 +78,6 @@ class Coocafe
             $response = Http::cresol()
                 ->withToken($token)
                 ->post('/coocafe/v1/atualizar-pedidos-parceiro-status?disablePagination=true&page=1&limit=10', $params);
-            dd($token, $response->body(), $response->status(), $response->json());
             return $response->successful();
         } catch (\Exception $e) {
             Log::error($e);
