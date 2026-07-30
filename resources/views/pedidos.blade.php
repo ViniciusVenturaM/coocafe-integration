@@ -33,7 +33,6 @@
             margin-top: 10px;
         }
 
-
         .header-container {
             display: flex;
             justify-content: center;
@@ -60,7 +59,6 @@
             right: 0;
             margin: 0;
         }
-
 
         .btn-primary {
             background-color: var(--coocafe-green);
@@ -150,6 +148,33 @@
         .input-controle {
             min-width: 200px;
         }
+
+        .status-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .dot-cancelado {
+            background-color: #dc3545;
+            /* Vermelho Bootstrap */
+            box-shadow: 0 0 6px rgba(220, 53, 69, 0.4);
+        }
+
+        .dot-nao-fechada {
+            background-color: #ffc107;
+            /* Amarelo Bootstrap */
+            box-shadow: 0 0 6px rgba(255, 193, 7, 0.4);
+        }
+
+        .dot-aberta {
+            background-color: #198754;
+            /* Verde Bootstrap */
+            box-shadow: 0 0 6px rgba(25, 135, 84, 0.4);
+        }
     </style>
 </head>
 
@@ -211,8 +236,30 @@
                     </thead>
                     <tbody>
                         @foreach ($pedidos->sortByDesc('NUMPED') as $pedido)
+                            @php
+                                $situacao = mb_strtolower(trim($pedido['SITPED']), 'UTF-8');
+                                $classePonto = '';
+
+                                if (str_contains($situacao, '5-cancelado')) {
+                                    $classePonto = 'dot-cancelado';
+                                } elseif (
+                                    str_contains($situacao, '9-não fechado') ||
+                                    str_contains($situacao, '9-nao fechado')
+                                ) {
+                                    $classePonto = 'dot-nao-fechada';
+                                } elseif (str_contains($situacao, '1-aberto total')) {
+                                    $classePonto = 'dot-aberta';
+                                }
+                            @endphp
+
                             <tr>
-                                <td><strong>{{ $pedido['NUMPED'] }}</strong></td>
+                                <td>
+                                    @if ($classePonto)
+                                        <span class="status-dot {{ $classePonto }}"
+                                            title="{{ trim($pedido['SITPED']) }}"></span>
+                                    @endif
+                                    <strong>{{ $pedido['NUMPED'] }}</strong>
+                                </td>
                                 <td>{{ $pedido['NOMCLI'] }}</td>
                                 <td>{{ $pedido['CGCCPF'] }}</td>
                                 <td>R$ {{ number_format($pedido['VLRLIQ'], 2, ',', '.') }}</td>
