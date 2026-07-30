@@ -226,7 +226,7 @@
                             <th>Cliente</th>
                             <th>CPF/CNPJ</th>
                             <th>Valor Líquido</th>
-                            <th>Status</th>
+                            <th class="text-center">Status</th>
                             <th>Situação</th>
                             <th>Data Emissão</th>
                             <th>Nº Processo Fluid</th>
@@ -250,6 +250,27 @@
                                 } elseif (str_contains($situacao, '1-aberto total')) {
                                     $classePonto = 'dot-aberta';
                                 }
+
+                                $statusStr = trim($pedido['BANSIT']);
+                                $badgeClass = 'bg-secondary';
+                                $statusTitle = 'Desconhecido';
+
+                                if ($statusStr === 'A') {
+                                    $badgeClass = 'bg-success';
+                                    $statusTitle = 'Aprovado';
+                                } elseif ($statusStr === 'E') {
+                                    $badgeClass = 'bg-warning text-dark';
+                                    $statusTitle = 'Em Análise';
+                                } elseif ($statusStr === 'R') {
+                                    $badgeClass = 'bg-danger';
+                                    $statusTitle = 'Reprovado';
+                                } elseif ($statusStr === 'L') {
+                                    $badgeClass = 'bg-primary';
+                                    $statusTitle = 'Liberado';
+                                } elseif ($statusStr === 'C') {
+                                    $badgeClass = 'bg-dark';
+                                    $statusTitle = 'Cancelado';
+                                }
                             @endphp
 
                             <tr>
@@ -263,7 +284,16 @@
                                 <td>{{ $pedido['NOMCLI'] }}</td>
                                 <td>{{ $pedido['CGCCPF'] }}</td>
                                 <td>R$ {{ number_format($pedido['VLRLIQ'], 2, ',', '.') }}</td>
-                                <td>{{ $pedido['BANSIT'] }}</td>
+                                <td class="text-center">
+                                    @if ($statusStr)
+                                        <span class="badge {{ $badgeClass }}" title="{{ $statusTitle }}"
+                                            style="font-size: 0.9em; padding: 0.5em 0.7em;">
+                                            {{ $statusStr }}
+                                        </span>
+                                    @else
+                                        -
+                                    @endif
+                                </td>
                                 <td>{{ $pedido['SITPED'] }}</td>
                                 <td>{{ \Carbon\Carbon::parse($pedido['DATEMI'])->format('d/m/Y') }}</td>
                                 <td>
