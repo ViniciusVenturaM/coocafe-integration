@@ -201,6 +201,7 @@
                             <th>Cliente</th>
                             <th>CPF/CNPJ</th>
                             <th>Valor Líquido</th>
+                            <th>Status</th>
                             <th>Situação</th>
                             <th>Data Emissão</th>
                             <th>Nº Processo Fluid</th>
@@ -216,6 +217,7 @@
                                 <td>{{ $pedido['CGCCPF'] }}</td>
                                 <td>R$ {{ number_format($pedido['VLRLIQ'], 2, ',', '.') }}</td>
                                 <td>{{ $pedido['BANSIT'] }}</td>
+                                <td>{{ $pedido['SITPED'] }}</td>
                                 <td>{{ \Carbon\Carbon::parse($pedido['DATEMI'])->format('d/m/Y') }}</td>
                                 <td>
                                     <div class="input-group input-group-sm" style="min-width: 150px;">
