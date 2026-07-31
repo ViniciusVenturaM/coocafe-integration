@@ -158,19 +158,22 @@
             margin-right: 8px;
             vertical-align: middle;
         }
-        
+
         .dot-cancelado {
-            background-color: #dc3545; /* Vermelho Bootstrap */
+            background-color: #dc3545;
+            /* Vermelho Bootstrap */
             box-shadow: 0 0 6px rgba(220, 53, 69, 0.4);
         }
-        
+
         .dot-nao-fechada {
-            background-color: #ffc107; /* Amarelo Bootstrap */
+            background-color: #ffc107;
+            /* Amarelo Bootstrap */
             box-shadow: 0 0 6px rgba(255, 193, 7, 0.4);
         }
-        
+
         .dot-aberta {
-            background-color: #198754; /* Verde Bootstrap */
+            background-color: #198754;
+            /* Verde Bootstrap */
             box-shadow: 0 0 6px rgba(25, 135, 84, 0.4);
         }
     </style>
@@ -182,12 +185,15 @@
         // Cálculo dos KPIs
         $totalAprovados = 0;
         $totalReprovados = 0;
+        $qtdPedidos = 0;
 
         if (isset($pedidos) && count($pedidos) > 0) {
+            $qtdPedidos = count($pedidos);
+
             foreach ($pedidos as $p) {
                 $statusCard = trim($p['BANSIT'] ?? '');
                 $valorLiquido = floatval($p['VLRLIQ'] ?? 0);
-                
+
                 if ($statusCard === 'A') {
                     $totalAprovados += $valorLiquido;
                 } elseif ($statusCard === 'R') {
@@ -225,8 +231,9 @@
         @endif
 
         <div class="row mb-4 mt-2">
+
             <!-- KPI Aprovados -->
-            <div class="col-6 col-md-3 mb-3 mb-md-0">
+            <div class="col-12 col-md-4 col-lg-3 mb-3 mb-md-0">
                 <div class="card shadow-sm border-0 border-start border-success border-4 h-100">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
@@ -243,14 +250,15 @@
             </div>
 
             <!-- KPI Reprovados -->
-            <div class="col-6 col-md-3">
+            <div class="col-12 col-md-4 col-lg-3 mb-3 mb-md-0">
                 <div class="card shadow-sm border-0 border-start border-danger border-4 h-100">
                     <div class="card-body d-flex align-items-center justify-content-between">
                         <div>
                             <h6 class="text-danger fw-bold text-uppercase mb-1" style="letter-spacing: 0.5px;">
                                 <i class="fas fa-times-circle me-1"></i> Reprovados (Total Liquido)
                             </h6>
-                            <h3 class="mb-0 fw-bold text-dark">R$ {{ number_format($totalReprovados, 2, ',', '.') }}</h3>
+                            <h3 class="mb-0 fw-bold text-dark">R$ {{ number_format($totalReprovados, 2, ',', '.') }}
+                            </h3>
                         </div>
                         <div class="text-danger" style="opacity: 0.2;">
                             <i class="fas fa-comment-dollar fa-3x"></i>
@@ -258,6 +266,24 @@
                     </div>
                 </div>
             </div>
+
+            <!-- KPI Quantidade de Pedidos -->
+            <div class="col-12 col-md-4 col-lg-3">
+                <div class="card shadow-sm border-0 border-start border-primary border-4 h-100">
+                    <div class="card-body d-flex align-items-center justify-content-between">
+                        <div>
+                            <h6 class="text-primary fw-bold text-uppercase mb-1" style="letter-spacing: 0.5px;">
+                                <i class="fas fa-box-open me-1"></i> Total de Pedidos
+                            </h6>
+                            <h3 class="mb-0 fw-bold text-dark">{{ $qtdPedidos }}</h3>
+                        </div>
+                        <div class="text-primary" style="opacity: 0.2;">
+                            <i class="fas fa-boxes fa-3x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="mb-4 d-flex justify-content-start">
@@ -293,10 +319,13 @@
                             @php
                                 $situacao = mb_strtolower(trim($pedido['SITPED']), 'UTF-8');
                                 $classePonto = '';
-                                
+
                                 if (str_contains($situacao, '5-cancelado')) {
                                     $classePonto = 'dot-cancelado';
-                                } elseif (str_contains($situacao, '9-não fechado') || str_contains($situacao, '9-nao fechado')) {
+                                } elseif (
+                                    str_contains($situacao, '9-não fechado') ||
+                                    str_contains($situacao, '9-nao fechado')
+                                ) {
                                     $classePonto = 'dot-nao-fechada';
                                 } elseif (str_contains($situacao, '1-aberto total')) {
                                     $classePonto = 'dot-aberta';
@@ -323,11 +352,12 @@
                                     $statusTitle = 'Cancelado';
                                 }
                             @endphp
-                            
+
                             <tr>
                                 <td>
-                                    @if($classePonto)
-                                        <span class="status-dot {{ $classePonto }}" title="{{ trim($pedido['SITPED']) }}"></span>
+                                    @if ($classePonto)
+                                        <span class="status-dot {{ $classePonto }}"
+                                            title="{{ trim($pedido['SITPED']) }}"></span>
                                     @endif
                                     <strong>{{ $pedido['NUMPED'] }}</strong>
                                 </td>
@@ -335,8 +365,9 @@
                                 <td>{{ $pedido['CGCCPF'] }}</td>
                                 <td>R$ {{ number_format($pedido['VLRLIQ'], 2, ',', '.') }}</td>
                                 <td class="text-center">
-                                    @if($statusStr)
-                                        <span class="badge {{ $badgeClass }}" title="{{ $statusTitle }}" style="font-size: 0.9em; padding: 0.5em 0.7em;">
+                                    @if ($statusStr)
+                                        <span class="badge {{ $badgeClass }}" title="{{ $statusTitle }}"
+                                            style="font-size: 0.9em; padding: 0.5em 0.7em;">
                                             {{ $statusStr }}
                                         </span>
                                     @else
